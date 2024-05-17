@@ -142,7 +142,6 @@ const LearnerSubmissions = [
   }
 ];
 
-
 function calculateWeightedAverage(assignments, submissions) {
     let totalScore = 0;
     let totalWeight = 0;
@@ -195,4 +194,13 @@ function calculateWeightedAverage(assignments, submissions) {
     return Object.values(learnerData).filter(data => data.avg !== null);
   }
 
-  
+  const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
+  console.log(result);
+
+// Example usage:
+// const courseInfo = { id: 1, name: "Mathematics" };
+// const assignmentGroup = { id: 1, name: "Homework", course_id: 1, group_weight: 50, assignments: [...] };
+// const learnerSubmissions = [{ learner_id: 1, assignment_id: 1, submission: { submitted_at: "2024-05-16T12:00:00Z", score: 80 } }, ...];
+
+// const result = getLearnerData(courseInfo, assignmentGroup, learnerSubmissions);
+// console.log(result);
