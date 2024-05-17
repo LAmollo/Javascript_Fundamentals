@@ -68,11 +68,11 @@
 //which should be an array of objects as described above.
 //You may use as many helper functions as you see fit.
 
-const CourseInfo = {
+const CourseInfo = { // Course information object
   id: 451,
   name: "Introduction to JavaScript"
 };
-const AssignmentGroup = {
+const AssignmentGroup = { // Assignment group object
   id: 12345,
   name: "Fundamentals of JavaScript",
   course_id: 451,
@@ -99,7 +99,7 @@ const AssignmentGroup = {
   ]
 };
 
-const LearnerSubmissions = [
+const LearnerSubmissions = [ // Learner submission data array
   {
     learner_id: 125,
     assignment_id: 1,
@@ -142,32 +142,32 @@ const LearnerSubmissions = [
   }
 ];
 
-function calculateWeightedAverage(assignments, submissions) {
+function calculateWeightedAverage(assignments, submissions) { // Function to calculate weighted average
     let totalScore = 0;
     let totalWeight = 0;
   
-    assignments.forEach(assignment => {
-      const submission = submissions.find(sub => sub.assignment_id === assignment.id);
-      if (submission && submission.submitted_at <= assignment.due_at) {
-        const latePenalty = submission.submitted_at > assignment.due_at ? 0.1 : 0;
-        const score = submission.score - (submission.score * latePenalty);
-        totalScore += score;
+    assignments.forEach(assignment => {  // Iterate over each assignment
+      const submission = submissions.find(sub => sub.assignment_id === assignment.id); // Find submission for the assignment
+      if (submission && submission.submitted_at <= assignment.due_at) { // Check if submission exists and if it's before or on the due date
+        const latePenalty = submission.submitted_at > assignment.due_at ? 0.1 : 0; // Calculate late penalty
+        const score = submission.score - (submission.score * latePenalty); // Calculate adjusted score considering late penalty
+        totalScore += score;                // Update total score and weight
         totalWeight += assignment.points_possible;
       }
     });
   
-    return totalWeight === 0 ? null : (totalScore / totalWeight) * 100;
+    return totalWeight === 0 ? null : (totalScore / totalWeight) * 100; // Calculate and return weighted average or null if total weight is 0
   }
   
-  function getLearnerData(courseInfo, assignmentGroup, learnerSubmissions) {
-    if (assignmentGroup.course_id !== courseInfo.id) {
+  function getLearnerData(courseInfo, assignmentGroup, learnerSubmissions) { // Function to get learner data
+    if (assignmentGroup.course_id !== courseInfo.id) {  // Check if assignment group belongs to the provided course
       throw new Error("Invalid input: Assignment group does not belong to the provided course.");
     }
   
     const assignmentsMap = new Map(assignmentGroup.assignments.map(assignment => [assignment.id, assignment]));
-    const learnerData = {};
+    const learnerData = {}; // Object to store learner data
   
-    learnerSubmissions.forEach(submission => {
+    learnerSubmissions.forEach(submission => { // Iterate over learner submissions
       if (!assignmentsMap.has(submission.assignment_id)) return;
   
       const assignment = assignmentsMap.get(submission.assignment_id);
@@ -182,21 +182,20 @@ function calculateWeightedAverage(assignments, submissions) {
         };
       }
   
-      if (!assignment.due_at || new Date() <= new Date(assignment.due_at)) {
+      if (!assignment.due_at || new Date() <= new Date(assignment.due_at)) {   // Update learner data with score percentage for the assignment
         learnerData[submission.learner_id][assignment.id] = scorePercentage * 100;
       }
     });
   
-    Object.values(learnerData).forEach(learner => {
+    Object.values(learnerData).forEach(learner => { // Calculate weighted average for each learner and update learner data
       learner.avg = calculateWeightedAverage(assignmentGroup.assignments, learnerSubmissions.filter(submission => submission.learner_id === learner.id));
     });
   
-    return Object.values(learnerData).filter(data => data.avg !== null);
+    return Object.values(learnerData).filter(data => data.avg !== null); // Filter out learners with null average and return formatted learner data
   }
 
-  const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
+  const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions); // Get learner data using provided inputs
   console.log(result);
-
 // Example usage:
 // const courseInfo = { id: 1, name: "Mathematics" };
 // const assignmentGroup = { id: 1, name: "Homework", course_id: 1, group_weight: 50, assignments: [...] };
